@@ -1,0 +1,15 @@
+# Bytecode and Python cache
+__pycache__/
+*.py[cod]
+*.class
+.pytest_cache/
+
+# Environment / local state
+.env
+.venv
+env/
+venv/
+*.log
+
+# Obsidian workspace cache (optional, keep configs, ignore volatile workspace)
+.obsidian/workspace.json
