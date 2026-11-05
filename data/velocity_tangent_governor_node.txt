@@ -1,0 +1,172 @@
+Registry integration (apply to sdf_lattice/registry.py):
+  1. Add VelocityTangentGovernorNode to the local imports from .nodes.
+  2. Add the class to concrete_nodes.
+Also add this import and name to sdf_lattice/nodes/__init__.py and __all__:
+  from .velocity_tangent_governor import VelocityTangentGovernorNode
+
+Example: node.compute({"tangential_velocity": 12.0, "drive_pressure": 8.0})
+Parameter and port units are model-defined; speed_setpoint/speed_scale must use
+the same units as tangential_velocity. This is a phenomenological control node,
+not an empirically calibrated law. The node is stateless; persist feedback via
+explicit graph connections only if a future stateful governor is designed.
+
+--- FILE: sdf_lattice/nodes/velocity_tangent_governor.py ---
+"""Velocity-tangent negative-feedback governor node for SDF-Lattice.
+
+Stateless valve: overspeed smoothly throttles positive drive pressure.
+All speeds and pressures use caller-chosen, internally consistent units.
+"""
+from __future__ import annotations
+
+import math
+from numbers import Real
+from typing import Any, Dict
+
+from .base import Node
+
+
+class VelocityTangentGovernorNode(Node):
+    """Throttle positive drive pressure when tangential speed exceeds a setpoint.
+
+    Let u=|v_t|-v_set. For u<=0 the valve is fully open. For u>0:
+        f_open = f_min + (1-f_min)/(1 + gain*(u/v_scale)**2)
+    Positive drive is multiplied by f_open; zero/negative drive passes unchanged.
+    Thus feedback never amplifies the drive and cannot obstruct collapse pressure.
+    The smooth, memoryless rule needs no hidden state or graph feedback edge.
+
+    Inputs: tangential_velocity (required, signed scalar), drive_pressure (optional, 0).
+    Outputs: speed, speed_error, valve_fraction, regulated_pressure, feedback_pressure.
+    feedback_pressure = regulated_pressure - drive_pressure (<=0 for positive drive).
+    """
+    type_name = "velocity_tangent_governor"
+    NODE_TYPE = type_name
+
+    def __init__(self, node_id: str, params: Dict[str, Any] | None = None):
+        super().__init__(node_id, params)
+        self.speed_setpoint = self._parameter("speed_setpoint", 1.0)
+        self.speed_scale = self._parameter("speed_scale", 0.25)
+        self.gain = self._parameter("gain", 1.0)
+        self.min_open = self._parameter("min_open", 0.0)
+        if self.speed_setpoint < 0.0:
+            raise ValueError("speed_setpoint must be non-negative")
+        if self.speed_scale <= 0.0:
+            raise ValueError("speed_scale must be strictly positive")
+        if self.gain < 0.0:
+            raise ValueError("gain must be non-negative")
+        if not 0.0 <= self.min_open <= 1.0:
+            raise ValueError("min_open must be in [0, 1]")
+
+    @staticmethod
+    def _finite_real(value: Any, name: str) -> float:
+        if isinstance(value, bool) or not isinstance(value, Real):
+            raise ValueError(f"{name} must be a finite real number")
+        result = float(value)
+        if not math.isfinite(result):
+            raise ValueError(f"{name} must be a finite real number")
+        return result
+
+    def _parameter(self, name: str, default: float) -> float:
+        return self._finite_real(self.params.get(name, default), name)
+
+    def compute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
+        if not isinstance(inputs, dict):
+            raise TypeError("inputs must be a mapping")
+        if "tangential_velocity" not in inputs:
+            raise ValueError("missing required input: tangential_velocity")
+        signed_velocity = self._finite_real(inputs["tangential_velocity"], "tangential_velocity")
+        drive = self._finite_real(inputs.get("drive_pressure", 0.0), "drive_pressure")
+        speed = abs(signed_velocity)
+        error = max(0.0, speed - self.speed_setpoint)
+        if error == 0.0 or self.gain == 0.0:
+            opening = 1.0
+        else:
+            ratio = error / self.speed_scale
+            opening = self.min_open + (1.0 - self.min_open) / (1.0 + self.gain * ratio * ratio)
+        regulated = drive * opening if drive > 0.0 else drive
+        return {
+            "speed": speed,
+            "speed_error": error,
+            "valve_fraction": opening,
+            "regulated_pressure": regulated,
+            "feedback_pressure": regulated - drive,
+        }
+
+--- FILE: tests/test_velocity_tangent_governor.py ---
+"""Rigorous deterministic tests for the velocity-tangent governor."""
+import math
+import unittest
+
+from sdf_lattice.nodes.velocity_tangent_governor import VelocityTangentGovernorNode
+
+
+class VelocityTangentGovernorTests(unittest.TestCase):
+    def setUp(self):
+        self.node = VelocityTangentGovernorNode("gov", {
+            "speed_setpoint": 10.0, "speed_scale": 2.0, "gain": 1.0, "min_open": 0.1
+        })
+
+    def test_below_and_at_setpoint_fully_open(self):
+        for velocity in (0.0, 10.0, -10.0, 9.5):
+            out = self.node.compute({"tangential_velocity": velocity, "drive_pressure": 7.0})
+            self.assertEqual(out["valve_fraction"], 1.0)
+            self.assertEqual(out["regulated_pressure"], 7.0)
+            self.assertEqual(out["feedback_pressure"], 0.0)
+
+    def test_overspeed_is_negative_feedback_and_matches_equation(self):
+        out = self.node.compute({"tangential_velocity": 12.0, "drive_pressure": 8.0})
+        expected_opening = 0.1 + 0.9 / (1 + ((12 - 10) / 2) ** 2)
+        self.assertAlmostEqual(out["valve_fraction"], expected_opening)
+        self.assertAlmostEqual(out["regulated_pressure"], 8 * expected_opening)
+        self.assertLess(out["feedback_pressure"], 0.0)
+        self.assertLess(out["regulated_pressure"], 8.0)
+
+    def test_feedback_is_monotonic_with_speed_and_never_amplifies(self):
+        vals = [self.node.compute({"tangential_velocity": v, "drive_pressure": 3})["valve_fraction"]
+                for v in (10, 11, 12, 20, 100)]
+        self.assertEqual(vals[0], 1.0)
+        self.assertTrue(all(a >= b for a, b in zip(vals, vals[1:])))
+        self.assertTrue(all(0.1 <= x <= 1.0 for x in vals))
+
+    def test_sign_invariance_and_collapse_pressure_bypass(self):
+        pos = self.node.compute({"tangential_velocity": 14, "drive_pressure": 5})
+        neg = self.node.compute({"tangential_velocity": -14, "drive_pressure": 5})
+        self.assertEqual(pos, neg)
+        collapse = self.node.compute({"tangential_velocity": 100, "drive_pressure": -4})
+        self.assertEqual(collapse["regulated_pressure"], -4.0)
+        self.assertEqual(collapse["feedback_pressure"], 0.0)
+
+    def test_zero_and_signed_speed_and_default_drive(self):
+        out = self.node.compute({"tangential_velocity": -12})
+        self.assertEqual(out["speed"], 12.0)
+        self.assertEqual(out["regulated_pressure"], 0.0)
+
+    def test_parameter_and_input_validation(self):
+        invalid = [
+            ({"speed_setpoint": -1}, ValueError),
+            ({"speed_scale": 0}, ValueError),
+            ({"gain": -1}, ValueError),
+            ({"min_open": 1.1}, ValueError),
+            ({"gain": float("nan")}, ValueError),
+        ]
+        for params, exc in invalid:
+            with self.subTest(params=params), self.assertRaises(exc):
+                VelocityTangentGovernorNode("bad", params)
+        for inputs in ({}, {"tangential_velocity": True},
+                       {"tangential_velocity": float("inf")},
+                       {"tangential_velocity": 1, "drive_pressure": float("nan")}):
+            with self.subTest(inputs=inputs), self.assertRaises(ValueError):
+                self.node.compute(inputs)
+        with self.assertRaises(TypeError):
+            self.node.compute(None)
+
+    def test_gain_zero_is_open_and_minimum_open_clamps(self):
+        open_node = VelocityTangentGovernorNode("open", {"gain": 0})
+        self.assertEqual(open_node.compute({"tangential_velocity": 1e6, "drive_pressure": 2})["valve_fraction"], 1.0)
+        shut = VelocityTangentGovernorNode("shut", {"speed_setpoint": 0, "speed_scale": 1, "gain": 1e6, "min_open": 0.2})
+        result = shut.compute({"tangential_velocity": 1e6, "drive_pressure": 2})
+        self.assertGreaterEqual(result["valve_fraction"], 0.2)
+        self.assertLessEqual(result["valve_fraction"], 1.0)
+
+
+if __name__ == "__main__":
+    unittest.main()
