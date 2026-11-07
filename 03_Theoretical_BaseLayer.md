@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary & Epistemic Foundations
 
-The standard cosmological model ($\Lambda\text{CDM}$) models dark matter as a collisionless, non-baryonic particulate fluid satisfying a dust equation of state ($w = 0$). While successful on cosmological scales ($z \gg 1$, CMB multipoles), it encounters persistent small-scale tensions at galactic scales (e.g., core-cusp problem, diversity of rotation curves, missing satellites). Modified Newtonian Dynamics (MOND) and its covariant extensions (e.g., TeVeS, relativistic AQUAL) succeed phenomenologically in matching the Radial Acceleration Relation (RAR), yet lack an underlying microphysical quantum vacuum description.
+The standard cosmological model ($\Lambda\text{CDM}$) models dark matter as a collisionless, non-baryonic particulate fluid satisfying a dust equation of state ($w = 0$) [@NFW1996; @NFW1997]. While successful on cosmological scales ($z \gg 1$, CMB multipoles), it encounters persistent small-scale tensions at galactic scales: the core-cusp problem [@deBlok2010CoreCusp; @deBlok2008THINGS], the diversity of rotation curves, and the missing-satellite count [@Bullock2017SmallScale]. Modified Newtonian Dynamics (MOND) and its covariant extensions (e.g., TeVeS, relativistic AQUAL) [@Milgrom1983a; @Milgrom1983b; @Famaey2012MOND] succeed phenomenologically in matching the Radial Acceleration Relation (RAR) [@McGaugh2016RAR], yet lack an underlying microphysical quantum vacuum description.
 
 The **SDF-QVEX (Spacetime Dielectric Foam / Quantum Vacuum Exotic eXcitations)** framework formulates galactic kinematics not as a particulate halo or an empirical modification of gravity, but as an emergent, non-equilibrium polarizable macroscopic state of quantum vacuum geometry.
 [ Planck Foam Metric g^{(0)}_{\mu\nu} ]
@@ -103,7 +103,7 @@ where $\mu_{\text{foam}}$ is the dynamic shear viscosity of the quantum lattice 
 
 ## 4. The Radial Unfreezing Mechanism $\xi(r)$
 
-A central failure of static cold dark matter profiles (NFW) in dwarf and low-surface-brightness (LSB) systems is the persistence of steep cusps ($\rho \propto r^{-1}$), whereas observations demonstrate flat cores ($\rho \propto r^0$).
+A central failure of static cold dark matter profiles (NFW) [@NFW1996; @NFW1997] in dwarf and low-surface-brightness (LSB) systems is the persistence of steep cusps ($\rho \propto r^{-1}$), whereas observations demonstrate flat cores ($\rho \propto r^0$) [@deBlok2010CoreCusp; @deBlok2008THINGS]. Cored alternatives include the Burkert [@Burkert1995] and Einasto [@Einasto1965] profiles.
 
 In the SDF framework, this transition is governed by an **order-parameter activation function**, termed the **Radial Unfreezing Function $\xi(r)$**:
 
@@ -119,7 +119,7 @@ $$\xi(a) = \left[ 1 + \left( \frac{a_0}{a_{\text{bar}}(r)} \right)^\eta \right]^
 | :--- | :--- | :--- | :--- |
 | **Interior Core** | $r \ll R_{\text{freeze}}$ ($a_{\text{bar}} \gg a_0$) | **Frozen Lattice** ($\xi \to 0$) | Newtonian behavior; vacuum shear is suppressed; no dark core anomaly. |
 | **Transition Zone** | $r \approx R_{\text{freeze}}$ ($a_{\text{bar}} \sim a_0$) | **Phase Liquefaction / Shear Excitation** | Rapid unfreezing; strain leads to mass-enhancement polarization. |
-| **Asymptotic Disk** | $r \gg R_{\text{freeze}}$ ($a_{\text{bar}} \ll a_0$) | **Fully Polarized Foam** ($\xi \to 1$) | Flat rotation curves; $v(r) \to v_{\text{flat}} = (G M_{\text{bar}} a_0)^{1/4}$. |
+| **Asymptotic Disk** | $r \gg R_{\text{freeze}}$ ($a_{\text{bar}} \ll a_0$) | **Fully Polarized Foam** ($\xi \to 1$) | Flat rotation curves; $v(r) \to v_\infty$, the **total** asymptotic circular speed. |
 
 The effective mass distribution $M_{\text{eff}}(r)$ observed gravitationally is given by:
 
@@ -137,13 +137,15 @@ Taking the covariant divergence of the total stress-energy tensor:
 
 $$\nabla^\mu T_{\mu\nu}^{(\text{total})} = 0 \implies \nabla^\mu T_{\mu\nu}^{(\text{bar})} = - \nabla^\mu T_{\mu\nu}^{(\text{SDF})} \equiv \mathcal{F}_\nu^{(\text{backreaction})}$$
 
-For stationary axisymmetric galactic discs in cylindrical coordinates $(R, \phi, z)$, projecting onto the radial direction yields the modified radial Jeans/Euler equilibrium:
+For stationary axisymmetric galactic discs in cylindrical coordinates $(R, \phi, z)$, projecting the steady-state Boltzmann moment equation onto the radial direction yields the modified radial Jeans/Euler equilibrium [@BinneyTremaine2008]:
 
 $$\frac{v_\phi^2(R)}{R} = \frac{\partial \Phi_{\text{bar}}}{\partial R} + \frac{1}{\rho_{\text{bar}}} \frac{\partial (\rho_{\text{bar}} \sigma_{R}^2)}{\partial R} + \frac{\sigma_R^2 - \sigma_\phi^2}{R} + \mathcal{F}_R^{(\text{SDF})}$$
 
 where the vacuum dielectric foam radial force per unit mass is:
 
 $$\mathcal{F}_R^{(\text{SDF})}(R) = \frac{1}{\rho_{\text{bar}}} \nabla_\mu \Pi^{\mu R}_{\text{foam}} + \xi(R) \frac{G M_{\text{polarization}}(R)}{R^2}$$
+
+A physical solution must also leave the disc gravitationally stable against axisymmetric perturbations, i.e. $Q > 1$ in the Toomre criterion [@Toomre1964Q]; a model that flattens the curve by destabilising the disc is excluded independently of the rotation-curve fit.
 
 In cold gaseous and thin-disk stellar components ($\sigma \ll v_\phi$), this reduces to the observed rotation curve equation:
 
@@ -155,16 +157,16 @@ $$v_{\text{circ}}^2(R) = R \left( \left| \frac{\partial \Phi_{\text{bar}}}{\part
 
 For the benchmark dwarf spiral **NGC 6503** (SPARC database catalogue), the explicit parameters entering into this theoretical framework are mapped as follows:
 
-- **Distance ($D$):** $5.27 \text{ Mpc}$
+- **Distance ($D$):** $6.26$ Mpc — the distance at which the SPARC mass model is built [@Lelli2016SPARC], and the one every statistic in this release uses. The earlier $5.27$ Mpc, which had no reference in this bibliography, is withdrawn as the adopted value; its effect on the fit is tabulated under *Distance sensitivity* in `00_Master_Paper.md`.
 - **Baryonic Subsystems:**
-  - Gas disk: $v_{\text{gas}}(r)$ derived from $21\text{ cm}$ H I surface density ($M_{\text{HI}} \approx 1.7 \times 10^9 M_\odot$).
-  - Stellar disk: $v_{\text{disk}}(r)$ with mass-to-light ratio $\Upsilon_{3.6} \approx 0.48 - 0.55 \, M_\odot / L_\odot$.
+  - Gas disk: $v_{\text{gas}}(r)$ derived from $21\text{ cm}$ H I surface density ($M_{\text{HI}} \approx 1.7 \times 10^9 M_\odot$) [@Freeland2010; @Lelli2016SPARC].
+  - Stellar disk: $v_{\text{disk}}(r)$ normalized at $\Upsilon_{3.6}=1$; the population-synthesis range $\Upsilon_{3.6}\approx0.48-0.55\,M_\odot/L_\odot$ [@Lelli2016SPARC] is quoted for context only, because the statistics reported below adopt $\Upsilon_{\rm disk}=0.62$.
 - **Observed Characteristics:**
-  - $R_{\text{freeze}} \approx 1.83 \text{ kpc}$ (onset of unfreezing).
-  - Transition index $\eta \approx 1.0 - 1.2$.
-  - Asymptotic velocity $v_{\text{flat}} \approx 116.2 \text{ km/s}$.
+  - $R_{\text{freeze}} \approx 1.83 \text{ kpc}$ (onset of unfreezing) — an **adopted** value of this release, not a fitted one [@SDFRadialUnfreezing2026].
+  - Transition index $\eta \approx 1.0 - 1.2$ — inherited from the superseded acceleration-space form and **not used** by the canonical $\zeta(r)$ closure [@SDFRadialUnfreezing2026].
+  - Asymptotic velocity $v_\infty \approx 116.2 \pm 2.4 \text{ km/s}$ [@Lelli2016SPARC] — the **total** asymptotic circular speed, an observable, not a model excess term.
 
-The theoretical prediction matches the empirical rotation velocity with minimal residual variance ($\chi_\nu^2 < 1.05$), eliminating both the cusp/core mismatch and the halo concentration-virial mass tension.
+On the full 31-bin SPARC curve for NGC 6503 the canonical closure with the adopted parameters ($\Upsilon_{\rm disk}=0.62$, $R_0=1.83$ kpc, $\Delta R=0.46$ kpc, $v_\infty=116.2$ km s$^{-1}$) gives $\chi^2=39.607$ with $N=31$, $p=1$, hence $\chi_\nu^2=1.320$ — which fails the manuscript's own $<1.25$ target, and the retracted $\chi_\nu^2<1.05$ claim is withdrawn. The model does eliminate the cusp/core mismatch by construction, since $\zeta(r)$ is smooth and has no singular core term, but that is a property of the ansatz rather than a fit result. The halo concentration-virial mass tension is not addressed by this closure at all and should not be claimed as resolved here.
 
 ---
 
@@ -184,5 +186,19 @@ The theoretical prediction matches the empirical rotation velocity with minimal 
 
 ## Consolidated radial-unfreezing convention (supersedes drifted notation)
 
-The project-wide order parameter is $\zeta(r)=\frac12[1+\tanh((r-R_0)/\Delta R)]$, with $R_0=1.83$ kpc and $\Delta R=0.46$ kpc; the saturation scale is $v_\infty=116.2$ km/s. For the executable phenomenological closure, $v_{\rm model}^2=v_{\rm bar}^2+v_\infty^2\zeta(r)$. These are fixed adopted values in this release, not a derivation from the microscopic SDF tensor. Prior symbols $\xi$, $r_h$, $R_{\rm trans}$, $r_{\rm crit}$ and the separate acceleration-threshold activation formula are legacy descriptions, not alternate simultaneous parameterizations. SI acceleration conversion uses $1$ kpc $=3.0857\times10^{19}$ m. See the equation snippet and verification script for operational definitions.
+The project-wide order parameter is $\zeta(r)=\frac12[1+\tanh((r-R_0)/\Delta R)]$, with $R_0=1.83$ kpc and $\Delta R=0.46$ kpc.
+
+**$v_\infty$ is the total asymptotic circular speed** $v_{\rm obs}(r\to\infty)$ — an observable ($116.2\pm2.4$ km/s for NGC 6503), not an additive model component. The executable phenomenological closure is therefore
+
+$$v_{\rm model}^2(r)=v_{\rm bar}^2(r)+\left[v_\infty^2-v_{\rm bar}^2(r)\right]\zeta(r),$$
+
+so that $v\to v_{\rm bar}$ as $r\to0$ and $v\to v_\infty$ exactly as $r\to\infty$.
+
+The superseded form $v_{\rm model}^2=v_{\rm bar}^2+v_\infty^2\zeta(r)$ is **withdrawn**: it treats $v_\infty$ as an excess, asymptotes to $\sqrt{v_{\rm bar}^2+v_\infty^2}=121.6$ km/s against an observed $115.3$, and overshoots by up to $+33$ km/s near $r=2.46$ kpc.
+
+On the 31-bin SPARC table (`data/NGC6503_rotmod.dat`) the corrected closure gives $\chi^2=39.607$ with $N=31$, $p=1$, hence $\chi_\nu^2=1.320$ for the adopted parameters, improving to $1.190$ when $v_\infty$, $R_0$ and $\Delta R$ are fitted ($v_\infty=116.27$, $R_0=1.583$ kpc, $\Delta R=1.036$ kpc). The retracted $\chi_\nu^2=0.942$ and outer slope $-0.018$ km s$^{-1}$ kpc$^{-1}$ are withdrawn; the model is exactly flat beyond $r\approx6$ kpc, so its computed OLS outer slope is $+2\times10^{-6}$.
+
+Two distinct objects appear in this document and must not be conflated: the theoretical polarization mass $M_{\rm polarization}(r)$ of §4, derived from $a_0$ and $M_{\rm bar}$, and the phenomenological closure above, whose scale $v_\infty$ is taken from the data. Only the former is a prediction; the latter is an interpolation, and $v_\infty$ must be counted as a fitted parameter in any $\chi_\nu^2$.
+
+These are fixed adopted values in this release, not a derivation from the microscopic SDF tensor. Prior symbols $\xi$, $r_h$, $R_{\rm trans}$, $r_{\rm crit}$ and the separate acceleration-threshold activation formula are legacy descriptions, not alternate simultaneous parameterizations. SI acceleration conversion uses $1$ kpc $=3.0857\times10^{19}$ m. See the equation snippet and verification script for operational definitions.
 

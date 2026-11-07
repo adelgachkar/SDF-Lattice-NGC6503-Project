@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use this code or the accompanying manuscript, please cite it as below."
+title: "SDF-Lattice NGC 6503: radial-unfreezing closure, verification code and audit record"
+type: software
+version: 0.1.0
+date-released: 2026-11-06
+license: MIT
+abstract: >-
+  Reference implementation and audit record for the radial-unfreezing closure of
+  the Spacetime Dielectric Foam (SDF / QVEX) framework, applied to the SPARC
+  rotation curve of the dwarf spiral galaxy NGC 6503. The canonical closure is
+  v_model^2 = v_bar^2 + (v_inf^2 - v_bar^2) * zeta(r) with
+  zeta(r) = 0.5 * (1 + tanh((r - R0) / DeltaR)); v_inf is the total asymptotic
+  circular speed, an observable, not an additive model component. On the 31-bin
+  SPARC table the adopted parameters give chi^2 = 39.607 with N = 31 and p = 1,
+  i.e. chi^2_nu = 1.320, which fails the project's own < 1.25 target; fitting the
+  transition with the stellar mass-to-light ratio pinned at 0.5 gives 1.190, and
+  leaving it free drives Upsilon_disk to its lower bound of 0.01. Earlier values
+  of 0.942 and 2.716 are withdrawn and documented as such. The repository
+  includes the verbatim SPARC data file, its provenance and checksum, a
+  standard-library-only verification script, a citation-coverage checker, and
+  the manuscript sources.
+authors:
+  - family-names: Gachkar
+    given-names: Adel
+    alias: adelgachkar
+keywords:
+  - galaxy rotation curves
+  - SPARC
+  - NGC 6503
+  - dark matter
+  - modified gravity
+  - quantum vacuum
+  - reproducible research
+  - chi-square
+repository-code: "https://github.com/adelgachkar/SDF-Lattice-NGC6503-Project"
+url: "https://github.com/adelgachkar/SDF-Lattice-NGC6503-Project"
+references:
+  - type: article
+    title: "SPARC: Mass Models for 175 Disk Galaxies with Spitzer Photometry and Accurate Rotation Curves"
+    authors:
+      - family-names: Lelli
+        given-names: Federico
+      - family-names: McGaugh
+        given-names: Stacy S.
+      - family-names: Schombert
+        given-names: James M.
+    year: 2016
+    journal: "The Astronomical Journal"
+    volume: 152
+    issue: 6
+    start: 157
+    doi: "10.3847/0004-6256/152/6/157"

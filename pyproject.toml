@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sdf-lattice-ngc6503"
+version = "0.1.0"
+description = "Radial-unfreezing (zeta) closure for the SDF-Lattice framework, verified against the SPARC rotation curve of NGC 6503"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Adel Gachkar" }]
+keywords = [
+    "galaxy-rotation-curves",
+    "SPARC",
+    "NGC6503",
+    "dark-matter",
+    "modified-gravity",
+    "chi-square",
+    "reproducible-research",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Repository = "https://github.com/adelgachkar/SDF-Lattice-NGC6503-Project"
+"Bug Tracker" = "https://github.com/adelgachkar/SDF-Lattice-NGC6503-Project/issues"
+
+[tool.setuptools]
+packages = ["sdf_lattice", "sdf_lattice.nodes"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

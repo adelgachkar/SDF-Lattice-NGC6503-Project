@@ -1,0 +1,22 @@
+# Runtime dependencies for sdf-lattice-ngc6503
+#
+# There are none. Everything in this repository — the zeta(r) closure, the
+# bounded Nelder-Mead fit, the SPARC parser and the citation checker — uses the
+# Python standard library only. `pip install -e .` therefore installs no
+# third-party packages, and every reported number is reproducible on a bare
+# CPython 3.10+ interpreter.
+#
+# This file exists so that tooling (and readers) can see that the runtime
+# requirement set is deliberately empty rather than undocumented.
+#
+# Optional, for running the test suite:
+#     pip install -e ".[test]"      # equivalent to: pip install pytest>=7
+#
+# Deliberately NOT required at runtime, although earlier revisions of the
+# manuscript assumed them:
+#   numpy      — no array code is used; the parser is a plain text loop.
+#   scipy      — the optimizer is implemented in Scripts/radial_unfreezing_verification.py.
+#   emcee      — no posterior has ever been sampled for this release.
+#
+# See PUBLICATION_AUDIT.md (section "Software actually used") for the full
+# accounting of which tools produced which numbers.

@@ -1,0 +1,20 @@
+include LICENSE
+include README.md
+include CITATION.cff
+include requirements.txt
+include PUBLICATION_AUDIT.md
+include MANIFEST.in
+
+# Manuscript sources and bibliography
+include *.md
+include References/*.bib
+
+# Verification scripts, bundled data and figures
+recursive-include Scripts *.py
+recursive-include data *
+recursive-include Assets *.png
+
+# Tests travel with the sdist so `pytest` works from an unpacked archive
+recursive-include tests *.py
+
+global-exclude __pycache__ *.py[cod]
